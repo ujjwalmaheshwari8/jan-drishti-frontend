@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Constituency {
+  id        String   @id
+  name      String
+  centerLat Float
+  centerLng Float
+  blocks    Block[]
+}
+
+model Block {
+  id             String   @id
+  name           String
+  constituencyId String
+  constituency   Constituency @relation(fields: [constituencyId], references: [id], onDelete: Cascade)
+  booths         Booth[]
+}
+
+model Booth {
+  id        String   @id
+  name      String
+  blockId   String
+  block     Block    @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  lat       Float
+  lng       Float
+  complaints       Complaint[]
+  governmentActions GovernmentAction[]
+}
+
+model Complaint {
+  id        String   @id
+  text      String
+  boothId   String
+  booth     Booth    @relation(fields: [boothId], references: [id], onDelete: Cascade)
+  issueType String
+  sentiment String   // Positive | Neutral | Negative
+  priority  String   // Low | Medium | High | Critical
+  location  String
+  timestamp String
+  status    String
+}
+
+model GovernmentAction {
+  id         String @id @default(cuid())
+  boothId    String
+  booth      Booth  @relation(fields: [boothId], references: [id], onDelete: Cascade)
+  boothName  String
+  issue      String
+  department String
+  status     String
+  eta        String
+}
