@@ -28,10 +28,12 @@ const ConstituencyMap = ({ constituency: constituencyProp, complaints: complaint
     const map = L.map(mapRef.current).setView(constituency.center, 14);
     mapInstance.current = map;
 
-    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; Stadia Maps & OpenMapTiles',
-    }).addTo(map);
-
+   // Replace the old L.tileLayer block with this one:
+L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 20
+}).addTo(map);
     constituency.blocks.forEach((block) => {
       block.booths.forEach((booth) => {
         const marker = L.circleMarker([booth.lat, booth.lng], {
